@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Manuel Scorza</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          ">
+          <div>
+            <h2>Panel Administrador</h2>
+            <p id="welcome" class="hint"></p>
+          </div>
+          <div>
+            <button id="logoutBtn" class="btn">Salir</button>
+          </div>
+        </div>
+
+        <hr style="margin: 12px 0" />
+
+        <p>
+          Panel de administración. Aquí puedes gestionar usuarios, revisar
+          estadísticas, administrar permisos y controlar la plataforma.
+        </p>
+      </section>
+    </main>
+
+    <!-- db.js contiene cerrarSesion() y obtenerSesion() -->
+    <script src="db.js"></script>
+
+    <script>
+      const sesion =
+        typeof obtenerSesion === "function" ? obtenerSesion() : null;
+
+      // Validar acceso
+      if (!sesion || sesion.role !== "admin") {
+        window.location.href = "index.html";
+      }
+
+      // Mostrar saludo
+      const welcomeEl = document.getElementById("welcome");
+      if (welcomeEl && sesion) {
+        welcomeEl.textContent =
+          "Hola, " +
+          (sesion.nombre || sesion.username || sesion.usuario || "") +
+          " — Rol: " +
+          sesion.role;
+      }
+
+      // Cerrar sesión
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        if (typeof cerrarSesion === "function") cerrarSesion();
+        else {
+          localStorage.removeItem("scorza_session");
+          sessionStorage.removeItem("scorza_session");
+        }
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html>

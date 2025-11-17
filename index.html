@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Manuel Scorza Torre</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1 class="title">Bienvenido a Scorza QR</h1>
+
+      <!-- SELECCIÓN DE ROL -->
+      <h2 class="subtitle">Selecciona tu rol</h2>
+
+      <div class="roles-container">
+        <div class="role-card" data-role="estudiante">
+          <img src="scr/libro.gif" class="role-icon" />
+          <p>Estudiante</p>
+        </div>
+
+        <div class="role-card" data-role="docente">
+          <img src="scr/colega.gif" class="role-icon" />
+          <p>Docente</p>
+        </div>
+
+        <div class="role-card" data-role="admin">
+          <img src="scr/formulario-de-firma.gif" class="role-icon" />
+          <p>Administrador</p>
+        </div>
+      </div>
+
+      <!-- FORMULARIO -->
+      <form id="loginForm" class="login-form hidden">
+        <h3 id="selectedRoleText">Rol seleccionado:</h3>
+
+        <input
+          type="text"
+          id="username"
+          placeholder="Usuario"
+          autocomplete="off"
+          required />
+        <input
+          type="password"
+          id="password"
+          placeholder="Contraseña"
+          required />
+
+        <button type="submit">Ingresar</button>
+
+        <p id="error-message" class="error-text"></p>
+
+        <!-- <p class="change-role" id="changeRoleBtn">← Cambiar rol</p> -->
+      </form>
+      <footer class="footer">
+        <p>© 2025 Instituto Manuel Scorza Torre</p>
+      </footer>
+    </div>
+
+    <!-- Cargar base de datos y luego el script principal -->
+    <script src="db.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

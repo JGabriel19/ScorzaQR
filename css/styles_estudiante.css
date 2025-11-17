@@ -1,0 +1,144 @@
+/* ============================================
+   ESTILO GLOBAL
+============================================ */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", Arial, sans-serif;
+  background: linear-gradient(135deg, #e9f0ff, #f7f7f7);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 18px;
+}
+
+/* ============================================
+   TARJETA PRINCIPAL
+============================================ */
+.card {
+  background: #ffffff;
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.6s ease both;
+}
+
+/* Animación de entrada */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Título */
+h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1d1d1d;
+}
+
+/* Subtítulo */
+.hint {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* ============================================
+   BOTÓN
+============================================ */
+.btn {
+  background: #005bff;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.25s ease;
+  box-shadow: 0 3px 8px rgba(0, 91, 255, 0.25);
+}
+
+.btn:hover {
+  background: #0047c7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 91, 255, 0.35);
+}
+
+/* ============================================
+   CÓDIGO QR
+============================================ */
+.qr-container {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+}
+
+#qrcode {
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  animation: fadeIn 0.8s ease both;
+}
+
+/* Animación del QR */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================
+   TEXTOS
+============================================ */
+p {
+  color: #333;
+  line-height: 1.4;
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 480px) {
+  h2 {
+    font-size: 22px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .btn {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+
+  #qrcode {
+    padding: 14px;
+  }
+}

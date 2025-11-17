@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docente - Asistencia</title>
+    <link rel="stylesheet" href="css/styles_docente.css" />
+    <script src="https://unpkg.com/html5-qrcode"></script>
+  </head>
+
+  <body>
+    <main class="container">
+      <section class="card">
+        <div class="header-row">
+          <div>
+            <h2>Panel Docente</h2>
+            <p id="welcome" class="hint"></p>
+          </div>
+
+          <div>
+            <button id="logoutBtn" class="btn">Salir</button>
+          </div>
+        </div>
+
+        <hr />
+
+        <p>Escanea un código QR para registrar la asistencia del estudiante.</p>
+
+        <!-- 📌 Escáner QR -->
+        <div id="reader"></div>
+        <div id="status" class="status"></div>
+      </section>
+    </main>
+
+    <script src="db.js"></script>
+
+    <script>
+      // ----------------------------
+      // VALIDAR SESIÓN DEL DOCENTE
+      // ----------------------------
+      const sesion =
+        typeof obtenerSesion === "function" ? obtenerSesion() : null;
+
+      if (!sesion || sesion.role !== "docente") {
+        window.location.href = "index.html";
+      }
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        if (typeof cerrarSesion === "function") {
+          cerrarSesion();
+        } else {
+          localStorage.removeItem("scorza_session");
+          sessionStorage.removeItem("scorza_session");
+        }
+        window.location.href = "index.html";
+      });
+
+      // ----------------------------
+      //    CONFIGURAR ESCÁNER QR
+      // ----------------------------
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbwoVozSyknnR6KiI5wi7pKgF8YXBU7Q72gN1S0LGzkE7T7E7BLgTNkCbFQa-CTOEMtT/exec";
+
+      const statusEl = document.getElementById("status");
+
+      async function registrarAsistencia(data) {
+        try {
+          await fetch(scriptURL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              codigo: data.codigo,
+              nombre: data.nombre,
+              metodo: "QR",
+              docente: sesion?.nombre || "Docente",
+            }),
+          });
+
+          statusEl.textContent = `✅ Asistencia registrada: ${data.nombre}`;
+          statusEl.classList.add("success");
+        } catch (error) {
+          statusEl.textContent = "❌ Error al registrar asistencia";
+          statusEl.classList.add("error");
+        }
+      }
+
+      function onScanSuccess(decodedText) {
+        try {
+          const data = JSON.parse(decodedText);
+          registrarAsistencia(data);
+          statusEl.textContent = `Registrando asistencia de ${data.nombre}...`;
+          statusEl.classList.remove("error", "success");
+        } catch (e) {
+          statusEl.textContent = "⚠️ Código QR no válido";
+          statusEl.classList.add("error");
+        }
+      }
+
+      const html5QrCode = new Html5Qrcode("reader");
+
+      Html5Qrcode.getCameras()
+        .then((cameras) => {
+          if (cameras.length > 0) {
+            html5QrCode.start(
+              cameras[0].id,
+              { fps: 10, qrbox: 250 },
+              onScanSuccess
+            );
+          } else {
+            statusEl.textContent = "No se encontró cámara.";
+            statusEl.classList.add("error");
+          }
+        })
+        .catch(() => {
+          statusEl.textContent = "Error accediendo a la cámara.";
+          statusEl.classList.add("error");
+        });
+    </script>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docente - Manuel Scorza</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="container">
+      <section class="card">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          ">
+          <div>
+            <h2>Panel Docente</h2>
+            <p id="welcome" class="hint"></p>
+          </div>
+
+          <div>
+            <button id="logoutBtn" class="btn">Salir</button>
+          </div>
+        </div>
+
+        <hr style="margin: 12px 0" />
+
+        <p>
+          Bienvenido al panel del docente. Aquí puedes gestionar clases, subir
+          material educativo, revisar el progreso de los estudiantes y más.
+        </p>
+      </section>
+    </main>
+
+    <!-- Cargar solo db.js (NO script.js)
+    <script src="db.js"></script>
+
+    <script>
+      // Obtener sesión
+      const sesion =
+        typeof obtenerSesion === "function" ? obtenerSesion() : null;
+
+      // Validar acceso
+      if (!sesion || sesion.role !== "docente") {
+        window.location.href = "index.html";
+      }
+
+      // Mostrar nombre del usuario
+      const welcomeEl = document.getElementById("welcome");
+      if (welcomeEl && sesion) {
+        welcomeEl.textContent =
+          "Hola, " +
+          (sesion.nombre || sesion.username || "") +
+          " — Rol: " +
+          sesion.role;
+      }
+
+      // Cerrar sesión
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        if (typeof cerrarSesion === "function") {
+          cerrarSesion();
+        } else {
+          localStorage.removeItem("scorza_session");
+          sessionStorage.removeItem("scorza_session");
+        }
+
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html> -->

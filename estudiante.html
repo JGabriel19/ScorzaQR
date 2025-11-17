@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estudiante - Manuel Scorza</title>
+    <link rel="stylesheet" href="css/styles_estudiante.css" />
+
+    <style>
+      #qrcode {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="container">
+      <section class="card">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          ">
+          <div>
+            <h2>Panel Estudiante</h2>
+            <p id="welcome" class="hint"></p>
+          </div>
+
+          <div>
+            <button id="logoutBtn" class="btn">Salir</button>
+          </div>
+        </div>
+
+        <hr style="margin: 12px 0" />
+
+        <p>
+          Este es tu panel personal como estudiante. Desde aquí podrás acceder y
+          visualizar tu código QR de asistencia
+        </p>
+
+        <!-- Contenedor donde irá el QR -->
+        <h3>Tu código QR de asistencia</h3>
+        <div id="qrcode"></div>
+      </section>
+    </main>
+
+    <!-- Base de datos y funciones de sesión -->
+    <script src="db.js"></script>
+
+    <!-- Librería QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+      // Obtener sesión
+      const usuario = obtenerSesion();
+
+      // Validación de acceso
+      if (!usuario || usuario.role !== "estudiante") {
+        window.location.href = "index.html";
+      }
+
+      // Mostrar saludo
+      document.getElementById("welcome").textContent =
+        "Hola, " + usuario.nombre + " — Rol: Estudiante";
+
+      // Generar QR SOLO con el nombre
+      const qr = new QRCode(document.getElementById("qrcode"), {
+        width: 200,
+        height: 200,
+      });
+
+      qr.makeCode(usuario.nombre);
+
+      // Cerrar sesión
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        cerrarSesion();
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estudiante - Manuel Scorza</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card">
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          ">
+          <div>
+            <h2>Panel Estudiante</h2>
+            <p id="welcome" class="hint"></p>
+          </div>
+          <div>
+            <!-- botón sin onclick inline
+            <button id="logoutBtn" class="btn">Salir</button>
+          </div>
+        </div>
+
+        <hr style="margin: 12px 0" />
+        <p>
+          Contenido pensado para estudiantes. Aquí puedes añadir enlaces a tus
+          cursos, notas o recursos.
+        </p>
+      </section>
+    </main>
+
+    <!-- Asegúrate de que db.js esté incluido primero: allí debe estar definida la función cerrarSesion() 
+    <script src="db.js"></script>
+
+    <script>
+      // Obtener sesión usando la función que definiste en db.js (obtenerSesion)
+      const sesion =
+        typeof obtenerSesion === "function" ? obtenerSesion() : null;
+
+      // Si no hay sesión o no coincide el rol, redirigir al login
+      if (!sesion || sesion.role !== "estudiante") {
+        // opción: mostrar un mensaje rápido antes de redirigir
+        // alert('Acceso no autorizado. Redirigiendo al inicio.');
+        window.location.href = "index.html";
+      }
+
+      // Mostrar saludo
+      const welcomeEl = document.getElementById("welcome");
+      if (welcomeEl && sesion) {
+        welcomeEl.textContent =
+          "Hola, " +
+          (sesion.nombre || sesion.username || sesion.usuario || "") +
+          " — Rol: " +
+          sesion.role;
+      }
+
+      // Logout: usamos la función cerrarSesion() que está en db.js
+      const logoutBtn = document.getElementById("logoutBtn");
+      logoutBtn.addEventListener("click", () => {
+        // si no existe la función cerrarSesion, eliminamos manualmente la key por seguridad
+        if (typeof cerrarSesion === "function") {
+          cerrarSesion();
+        } else {
+          localStorage.removeItem("usuarioLogeado");
+          localStorage.removeItem("scorza_session");
+          sessionStorage.removeItem("scorza_session");
+        }
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html> -->
